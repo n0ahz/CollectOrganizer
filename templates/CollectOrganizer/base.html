@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Collection {% block title %}{% endblock %}</title>
+
+        <!--Add BootStrap-->
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		{% load staticfiles %}
+
+        {% block css %}
+        <!-- compiled and minified CSS JS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'CollectOrganizer/css/bootstrap.min.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'CollectOrganizer/css/font-awesome.min.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'CollectOrganizer/css/custom.css' %}"/>
+        {% endblock css %}
+
+        {% block js %}
+        <script src="{% static 'CollectOrganizer/js/jquery.min.js' %}"></script>
+        <script src="{% static 'CollectOrganizer/js/bootstrap.min.js' %}"></script>
+        {% endblock js %}
+	</head>
+	
+	<body>
+
+        <div id="container" class="container-fluid">
+            <div class="rect1"></div>
+            <!-- Static header navbar -->
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="{% url 'CollectOrganizer.views.home' %}">HZ's Collection Organizer</a>
+                    </div>
+
+                    <div id="navbar" class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li><a href="{% url 'CollectOrganizer.views.home' %}"><button type="button" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</button></a></li>
+
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><button type="button" class="btn btn-lg btn-info"><span class="glyphicon glyphicon-gift" aria-hidden="true"></span> Collection <span class="caret"></span></button></a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{% url 'CollectOrganizer.views.not_available' %}"><span class="glyphicon glyphicon-film" aria-hidden="true"></span> Movies</a></li>
+                                    <li><a href="{% url 'CollectOrganizer.views.not_available' %}"><img src="{% static 'CollectOrganizer/imgs/tv.png' %}"/> TV Series</a></li>
+                                    <li><a href="{% url 'CollectOrganizer.views.not_available' %}"><img src="{% static 'CollectOrganizer/imgs/tf.png' %}"/> Cartoons</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Others</li>
+                                    <li><a href="{% url 'CollectOrganizer.views.not_available' %}"><span class="glyphicon glyphicon-music" aria-hidden="true"></span> Music</a></li>
+                                    <li><a href="{% url 'CollectOrganizer.views.not_available' %}"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Books</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><button type="button" class="btn btn-lg btn-warning"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Settings <span class="caret"></span></button></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{% url 'CollectOrganizer.views.not_available' %}"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Library Path</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Edit</li>
+                                    <li><a href="{% url 'CollectOrganizer.views.not_available' %}"><span class="glyphicon glyphicon-film" aria-hidden="true"></span> Movies</a></li>
+                                    <li><a href="{% url 'CollectOrganizer.views.not_available' %}"><img src="{% static 'CollectOrganizer/imgs/tv.png' %}"/> TV Series</a></li>
+                                    <li><a href="{% url 'CollectOrganizer.views.not_available' %}"><img src="{% static 'CollectOrganizer/imgs/tf.png' %}"/> Cartoons</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Others</li>
+                                    <li><a href="{% url 'CollectOrganizer.views.not_available' %}"><span class="glyphicon glyphicon-music" aria-hidden="true"></span> Music</a></li>
+                                    <li><a href="{% url 'CollectOrganizer.views.not_available' %}"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Books</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Admin Panel</li>
+                                    <li><a href="{% url 'CollectOrganizer.views.admin' %}"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Administration</a></li>
+                                </ul>
+                            </li>
+
+                            <li><a href="{% url 'CollectOrganizer.views.about' %}"><button type="button" class="btn btn-lg btn-danger"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> About</button></a></li>
+
+                        </ul>
+
+                    </div><!--/.nav-collapse -->
+                </div><!--/.container-fluid -->
+            </nav>
+
+            <!-- Content -->
+            {% block content %}
+
+            {% endblock content %}
+            <!-- content end -->
+
+            <!-- footer -->
+            <div class="row">
+                <div class="col-lg-1 col-md-2 col-sm-2 col-xs-4">&copy 2016 HZ</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-6">Powered by django</div>
+                <div class="col-lg-9 col-md-8 col-sm-7 col-xs-2">Help</div>
+            </div>
+            <!-- footer end -->
+        </div>
+	</body>
+</html>

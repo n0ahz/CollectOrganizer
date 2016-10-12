@@ -1,0 +1,15 @@
+{% extends 'CollectOrganizer/base.html' %}
+
+{% block title%}- Main page{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1>HZ's Collection Organizer</h1>
+    <blockquote>
+        <p>A tool for organizing digital collection of media, e.g. Movies, TV shows, Cartoon Series. Also Music, Books and other types of Collectables are kept in todo list.</p>
+    </blockquote>
+    <p>
+        <a class="btn btn-lg btn-primary" href="{% url 'CollectOrganizer.views.about' %}" role="button">View Software Features &raquo;</a>
+    </p>
+</div>
+{% endblock content %}
