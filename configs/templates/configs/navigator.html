@@ -1,0 +1,101 @@
+{% extends 'CollectOrganizer/base.html' %}
+
+{% block title%}- Add Library{% endblock %}
+
+{% block content %}
+    <form action="{% url 'configs:navigator' %}" method="post" class="form-inline">
+        {% csrf_token %}
+        <fieldset>
+            <legend>Navigate to a path and Add as source for the following media type:</legend>
+            <label>Path:&nbsp;&nbsp;</label><label class="panel popover-title">{{ current }}</label>
+            <input name="media_path" value="{{ current }}" type="hidden"/>
+            <br/>
+            <br/>
+            <label>Media Type: </label>
+            <select name="media_type" class="form-control">
+                <option value="movies">Movies</option>
+                <option value="tvseries">TV Series</option>
+                <option value="toons">Cartoons</option>
+                <option value="music">Music</option>
+                <option value="books">Books</option>
+                <option value="comics">Comics</option>
+            </select>
+            <br/>
+            <br/>
+            <input type="submit" value="Add" class="form-control btn-danger"/>
+        </fieldset>
+    </form>
+    <br/>
+
+    {% if messages %}
+    <div class="">
+        <ul class="list-group">
+        {% for message in messages %}
+            {% if message.tags == 'info' %}
+                <li class="list-group list-group-item list-group-item-heading list-group-item-warning"><b><span class="glyphicon glyphicon-flash"></span> {{ message }}</b></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+
+    <div class="jumbotron">
+        <p class="panel popover-title text-center"><span class="glyphicon glyphicon glyphicon-search"></span> Directory Explorer</p>
+
+        {% if request.GET.dir %}
+            {% if current in drives %}
+                <a href="{% url 'configs:navigator' %}"><h2 class="fa fa-arrow-circle-left"> Back</h2></a>
+            {% else %}
+                <a href="{% url 'configs:navigator' %}?dir=.."><h2 class="fa fa-arrow-circle-left"> Back</h2></a>
+            {% endif %}
+            <span>&NonBreakingSpace;&NonBreakingSpace;&NonBreakingSpace;&NonBreakingSpace;&NonBreakingSpace;&NonBreakingSpace;</span>
+            <a href="{% url 'configs:navigator' %}"><h2 class="fa fa-desktop"> Computer</h2></a>
+        {% else %}
+            <h2 class="fa fa-desktop"> Computer</h2>
+        {% endif %}
+
+        <div class="row">
+            <p class="col-lg-2 col-md-2 col-sm-2 text-right address">Address</p>
+            <p class="panel modal-title col-lg-10 col-md-10 col-sm-10 col-xs-12">{{ current }}</p>
+        </div>
+        <hr/>
+
+        {% if not dirs and not files and not parent %}
+            {% for each in drives %}
+                <a href="{% url 'configs:navigator' %}?dir={{ each|urlencode }}"><p class="glyphicon glyphicon-hdd"> {{ each }}</p>
+                </a><br/>
+            {% endfor %}
+            <hr/>
+        {% endif %}
+
+        {% if messages %}
+            <div class="">
+                <ul class="list-group">
+                    {% for message in messages %}
+                        {% if message.tags == 'warning' %}
+                            <li class="list-group list-group-item list-group-item-heading list-group-item-warning">
+                                <b><span class="glyphicon glyphicon-flash"></span> {{ message }}</b></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if dirs %}
+            <p><b><i>Folders</i></b></p>
+            {% for each in dirs %}
+                <a href="{% url 'configs:navigator' %}?dir={{ each|urlencode }}"><p class="glyphicon glyphicon-folder-open"> {{ each }}</p></a><br/>
+            {% endfor %}
+            <hr/>
+        {% endif %}
+
+        {% if files %}
+            <p><b><i>Files</i></b></p>
+            {% for each in files %}
+                <span class="glyphicon glyphicon-file"> {{ each }}</span><br/>
+            {% endfor %}
+            <hr/>
+        {% endif %}
+    </div>
+{% endblock content %}

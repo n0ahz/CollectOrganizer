@@ -1,0 +1,48 @@
+{% extends 'CollectOrganizer/base.html' %}
+
+{% block title %}Library Paths{% endblock %}
+
+{% load static %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h3 class="breadcrumb modal-header text-center"><span class="glyphicon glyphicon-th-list"> Drives</span></h3>
+        {% if paths %}
+            <table id="paths_table" class="table"></table>
+        {% else %}
+            <p class="popover-content text-warning"><span class="glyphicon glyphicon-warning-sign"> No path added to Collections</span></p>
+        {% endif %}
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var $table = '#paths_table';
+
+            var data = [];
+
+            var grid = {
+                width: 800,
+                height: 500,
+                title: "Library",
+                resizable:true,
+                draggable:true
+            };
+
+            grid.colModel = [
+                { title: "Media Type", width: 200, dataType: "string" },
+                { title: "Media Path", width: 500, dataType: "string" }
+            ];
+
+            {% for path in paths %}
+                data.push(["{{ path.media_type | title }}", "{{ path.media_path | escapejs }}"]);
+            {% endfor %}
+
+            grid.dataModel = { data: data };
+
+            $($table).pqGrid(grid);
+            $($table).pqGrid("option", "pageModel.type", "local");
+            $($table).pqGrid("refreshView");
+
+        });
+    </script>
+{% endblock content %}
