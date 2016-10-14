@@ -20,21 +20,121 @@
 
             var data = [];
 
+            //define common ajax object for addition, update and delete.
+            var ajaxObj = {
+                dataType: "JSON",
+                beforeSend: function () {
+                    this.pqGrid("showLoading");
+                },
+                complete: function () {
+                    this.pqGrid("hideLoading");
+                },
+                error: function () {
+                    this.pqGrid("rollback");
+                }
+            };
+
+            //called by delete button.
+            function deleteRow(rowIndx, $grid) {
+                $grid.pqGrid("addClass", { rowIndx: rowIndx, cls: 'pq-row-delete' });
+                var rowData = $grid.pqGrid("getRowData", { rowIndx: rowIndx });
+                var ans = window.confirm("Are you sure to delete row No " + (rowIndx + 1) + "?");
+
+                if (ans) {
+                    $grid.pqGrid("deleteRow", { rowIndx: rowIndx, effect: true });
+
+                    var PathId = $grid.pqGrid("getRecId", { rowIndx: rowIndx });
+
+                    $.ajax($.extend({}, ajaxObj, {
+                        context: $grid,
+                        url: "/configs/navigator/delete",
+                        data: { path_id: PathId },
+                        success: function () {
+                            $grid.pqGrid("commit");
+                            $grid.pqGrid("refreshDataAndView");
+                        },
+                        error: function () {
+                            //debugger;
+                            $grid.pqGrid("removeClass", { rowData: rowData, cls: 'pq-row-delete' });
+                            $grid.pqGrid("rollback");
+                        }
+                    }));
+                }
+                else {
+                    $grid.pqGrid("removeClass", { rowIndx: rowIndx, cls: 'pq-row-delete' });
+                }
+            }
+
             var grid = {
                 width: 800,
                 height: 500,
                 title: "Library",
-                resizable:true,
-                draggable:true
+                resizable: true,
+                collapsible: false,
+                filterModel: { on: true, mode: "AND", header: true },
+                editable: false,
+                //use refresh event to display jQueryUI buttons and bind events.
+                refresh: function () {
+                    //debugger;
+                    var $grid = $(this);
+                    if (!$grid) {
+                        return;
+                    }
+                    //delete button
+                    $grid.find("button.delete_btn").button({ icons: { primary: 'ui-icon-close'} }).unbind("click").bind("click", function (evt) {
+                        var $tr = $(this).closest("tr");
+                        var rowIndx = $grid.pqGrid("getRowIndx", { $tr: $tr }).rowIndx;
+                        alert(rowIndx);
+                        deleteRow(rowIndx, $grid);
+                    });
+                }
             };
 
             grid.colModel = [
-                { title: "Media Type", width: 200, dataType: "string" },
-                { title: "Media Path", width: 500, dataType: "string" }
+                {
+                    title: "Path ID",
+                    dataType: "integer",
+                    dataIndx: "PathID",
+                    hidden: true
+                },
+                {
+                    title: "Media Type",
+                    width: 200,
+                    dataType: "string",
+                    filter: { type: "select",
+                        condition: 'equal',
+                        prepend: { '': '--Select--' },
+                        options: [
+                            {
+                                "movies":"Movies",
+                                "tvseries":"TV Series",
+                                "toons":"Cartoons",
+                                "music":"Music",
+                                "books":"Books",
+                                "comics":"Comics"
+                            }
+                        ],
+                        listeners: ['change']
+                    }
+                },
+                {
+                    title: "Media Path",
+                    width: 500,
+                    dataType: "string"
+                },
+                {
+                    title: "",
+                    editable: false,
+                    minWidth: 50,
+                    sortable: false,
+                    render: function (ui) {
+                        return "<button type='button' class='delete_btn'>Delete</button>";
+                    }
+                }
             ];
 
             {% for path in paths %}
-                data.push(["{{ path.media_type | title }}", "{{ path.media_path | escapejs }}"]);
+                data.push(["{{ path.id }}", "{{ path.media_type | title }}", "{{ path.media_path | escapejs }}"]);
             {% endfor %}
 
             grid.dataModel = { data: data };
